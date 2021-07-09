@@ -16,10 +16,6 @@ class Players
         puts "#{enemy.char_name} has #{enemy.char_hitpoint} hitpoints and #{@char_attack} attack damage"
     end
 
-    def heal_ally(hitpoint)
-        @char_hitpoint += hitpoint
-    end
-
     def take_damage(damage)
         @char_hitpoint -= damage
     end
