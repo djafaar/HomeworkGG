@@ -13,6 +13,7 @@ mongolSwordsman = Swordsman.new("Mongol Swordsman", 100, 50)
 heroes = [jin, yuna, sensei_Ishikawa]
 villains = [mongolArcher, mongolSpearman, mongolSwordsman]
 turn = 1
+
 until (jin.die? or villains.empty?) do
     puts "================ Turn #{turn} ================"
     puts "\n"
@@ -29,33 +30,47 @@ until (jin.die? or villains.empty?) do
     
     puts "As jin sakai, What do you wanna do this turn?
     \n1) Attack an enemy\n2)Heal an ally"
-    answer = gets.chomp()
-    if answer == "1"
+    answer = gets.chomp().to_i
+    puts "\n"
+    if answer == 1
         puts "which enemy you pick?\n1)Archer\n2)Spearman\n3)Swordsman"
-        attacks = gets.chomp()
-        jin.attack(mongolArcher) if attacks == "1"
-        jin.attack(mongolSpearman) if attacks == "2"
-        jin.attack(mongolSwordsman) if attacks == "3"
+        attacks = gets.chomp().to_i
+        puts "\n"
+        jin.attack(mongolArcher) if attacks == 1
+        jin.attack(mongolSpearman) if attacks == 2
+        jin.attack(mongolSwordsman) if attacks == 3
+        villains.each do |villain|
+            villains.delete(villain) if villain.die? or villain.flee?
+        end
     else 
         puts "which ally you heal?\n1)Yuna\n2)Sensei Ishikawa"
-        heal = gets.chomp
-        jin.heal(yuna) if heal == "1"
-        jin.heal(sensei_Ishikawa) if heal == "2"
+        heal = gets.chomp.to_i
+        puts "\n"
+        jin.heal(yuna) if heal == 1
+        jin.heal(sensei_Ishikawa) if heal == 2
     end
 
-    yuna.attack(villains[rand(villains.size)])
-    villains.each do |villain|
-        villains.delete(villain) if villain.die? or villain.flee?
+    if !yuna.die? and !villains.empty?
+        yuna.attack(villains[rand(villains.size)])
+        villains.each do |villain|
+            villains.delete(villain) if villain.die? or villain.flee?
+        end
     end
-    sensei_Ishikawa.attack(villains[rand(villains.size)])
-    villains.each do |villain|
-        villains.delete(villain) if villain.die? or villain.flee?
+
+    if !sensei_Ishikawa.die? and !villains.empty?
+        sensei_Ishikawa.attack(villains[rand(villains.size)])
+        villains.each do |villain|
+            villains.delete(villain) if villain.die? or villain.flee?
+        end
     end
 
     villains.each do |villain|
-        villain.attack(heroes[rand(heroes.size)])
+        if villain.die?
+            villain.attack(heroes[rand(heroes.size)])
+        end
     end
     puts "\n"
+    puts "Jin Win" if villains.empty?
     turn += 1
 end
 
